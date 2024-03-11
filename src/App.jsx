@@ -1,6 +1,21 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const Country = ({ country }) => (
+    <div>
+        <h2>{country.name.common}</h2>
+        <p>capital {country.capital}</p>
+        <p>area {country.area} km²</p>
+        <h3>languages:</h3>
+        <ul>
+            {Object.values(country.languages).map((language, index) => (
+                <li key={index}>{language}</li>
+            ))}
+        </ul>
+        <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" />
+    </div>
+);
+
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [countries, setCountries] = useState([]);
@@ -9,7 +24,7 @@ const App = () => {
 
     useEffect(() => {
         const fetchCountries = async () => {
-            if (searchTerm.trim() === '') {
+            if (!searchTerm.trim()) {
                 setCountries([]);
                 setErrorMessage('');
                 return;
@@ -46,42 +61,37 @@ const App = () => {
 
     const handleSubmit = event => {
         event.preventDefault();
-        // No need to fetch countries here, useEffect will handle it
+    };
+
+    const handleClickCountry = country => {
+        setCountry(country);
+        setCountries([]);
+        setSearchTerm('');
     };
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="search">find countries</label>
+                <label htmlFor="search">Find countries</label>
                 <input
                     type="text"
                     id="search"
                     value={searchTerm}
                     onChange={handleInputChange}
-
                 />
                 <button type="submit">Search</button>
             </form>
             {errorMessage && <p>{errorMessage}</p>}
-            {country && (
-                <div>
-                    <h2>{country.name.common}</h2>
-                    <p>capital {country.capital}</p>
-                    <p>area {country.area}</p>
-                    <h3>languages:</h3>
-                    <ul>
-                        {Object.entries(country.languages).map(([key, value]) => (
-                            <li key={key}>{value}</li>
-                        ))}
-                    </ul>
-                    <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" />
-                </div>
-            )}
+            {country && <Country country={country} />}
             {countries.length > 0 && (
                 <div>
+
                     <ul>
                         {countries.map((country, index) => (
-                            <li key={index}>{country.name.common}</li>
+                            <li key={index}>
+                                {country.name.common}
+                                <button onClick={() => handleClickCountry(country)}>show</button>
+                            </li>
                         ))}
                     </ul>
                 </div>
