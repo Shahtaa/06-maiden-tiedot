@@ -8,40 +8,40 @@ const App = () => {
     const [country, setCountry] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const fetchCountries = async () => {
-        if (!searchTerm.trim()) {
-            setCountries([]);
-            setErrorMessage('');
-            return;
-        }
-        try {
-            const response = await axios.get('https://restcountries.com/v3.1/all');
-            const data = response.data;
-            const filteredCountries = data.filter(country =>
-                country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setCountry(null);
-            if (filteredCountries.length === 1) {
-                setCountry(filteredCountries[0]);
-                setCountries([]);
-                setErrorMessage('');
-            } else if (filteredCountries.length > 10) {
-                setCountry(null);
-                setCountries([]);
-                setErrorMessage('Too many matches, specify another filter.');
-            } else {
-                setCountry(null);
-                setCountries(filteredCountries);
-                setErrorMessage('');
-            }
-        } catch (error) {
-            setCountry(null);
-            setCountries([]);
-            setErrorMessage('Error fetching data.');
-        }
-    };
-
     useEffect(() => {
+        const fetchCountries = async () => {
+            if (!searchTerm.trim()) {
+                setCountries([]);
+                setErrorMessage('');
+                return;
+            }
+            try {
+                const response = await axios.get('https://restcountries.com/v3.1/all');
+                const data = response.data;
+                const filteredCountries = data.filter(country =>
+                    country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                setCountry(null);
+                if (filteredCountries.length === 1) {
+                    setCountry(filteredCountries[0]);
+                    setCountries([]);
+                    setErrorMessage('');
+                } else if (filteredCountries.length > 10) {
+                    setCountry(null);
+                    setCountries([]);
+                    setErrorMessage('Too many matches, specify another filter.');
+                } else {
+                    setCountry(null);
+                    setCountries(filteredCountries);
+                    setErrorMessage('');
+                }
+            } catch (error) {
+                setCountry(null);
+                setCountries([]);
+                setErrorMessage('Error fetching data.');
+            }
+        };
+
         fetchCountries();
     }, [searchTerm]);
 
