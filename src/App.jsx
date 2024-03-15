@@ -1,20 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const Country = ({ country }) => (
-    <div>
-        <h2>{country.name.common}</h2>
-        <p>capital {country.capital}</p>
-        <p>area {country.area}</p>
-        <h3>Languages:</h3>
-        <ul>
-            {Object.values(country.languages).map((language, index) => (
-                <li key={index}>{language}</li>
-            ))}
-        </ul>
-        <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" />
-    </div>
-);
+import Country from './components/Country';
 
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -34,7 +20,7 @@ const App = () => {
             const filteredCountries = data.filter(country =>
                 country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
             );
-            setCountry(null); // Reset country when fetching new search results
+            setCountry(null);
             if (filteredCountries.length === 1) {
                 setCountry(filteredCountries[0]);
                 setCountries([]);
@@ -65,14 +51,14 @@ const App = () => {
 
     const handleShowCountry = selectedCountry => {
         setCountry(selectedCountry);
-        setCountries([]); // Clear countries list
+        setCountries([]); // Clear other countries
         setErrorMessage(''); // Clear error message
     };
 
     return (
         <div>
             <form onSubmit={e => e.preventDefault()}>
-                <label htmlFor="search">find countries</label>
+                <label htmlFor="search">Find countries</label>
                 <input
                     type="text"
                     id="search"
@@ -88,7 +74,7 @@ const App = () => {
                     {countries.map((country, index) => (
                         <li key={index}>
                             {country.name.common}
-                            <button onClick={() => handleShowCountry(country)}>show</button>
+                            <button onClick={() => handleShowCountry(country)}>Show</button>
                         </li>
                     ))}
                 </ul>
